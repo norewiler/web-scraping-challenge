@@ -10,12 +10,19 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://localhost:27017/craigslist_app"
 mongo = PyMongo(app)
 
+# # identify the collection and drop any existing data for this demonstration
+# mars_info = mongo.db.mars_info
+# mars_info.drop()
+
 
 
 @app.route("/")
 def index():
     mars_info = mongo.db.mars_info.find_one()
-    return render_template("index.html", mars_info = mars_info)
+    if mars_info is None:
+        return render_template("blank.html")
+    else:
+        return render_template("index.html", mars_info = mars_info)
 
 @app.route("/scrape")
 def scrape():
